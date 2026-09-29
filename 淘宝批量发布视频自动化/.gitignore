@@ -1,0 +1,14 @@
+# Local captures, outputs, and temporary test files
+.firecrawl/
+.test_run/
+.test_tmp/
+.tmp-test/
+.tmp-publish-mode-tests/
+outputs/
+tmp*/
+**/__pycache__/
+**/*.py[cod]
+*.sqlite3
+*.db
+.venv/
+.env

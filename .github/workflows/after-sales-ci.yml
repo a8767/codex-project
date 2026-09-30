@@ -1,0 +1,34 @@
+name: After-sales CI
+
+on:
+  push:
+    paths:
+      - "售后数据计算/**"
+      - ".github/workflows/after-sales-ci.yml"
+  pull_request:
+    paths:
+      - "售后数据计算/**"
+      - ".github/workflows/after-sales-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: 售后数据计算
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.10"
+      - name: Install project dependency
+        run: python -m pip install "openpyxl>=3.1,<4"
+      - name: Check Python syntax
+        run: >-
+          python -c "import ast; from pathlib import Path; files=sorted(Path('.').glob('*.py')); [ast.parse(p.read_text(encoding='utf-8'), filename=str(p)) for p in files]; print(f'Parsed {len(files)} Python files')"
+      - name: Run unit tests
+        run: python -B -m unittest -v test_personal_reports

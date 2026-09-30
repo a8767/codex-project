@@ -30,5 +30,8 @@ jobs:
       - name: Check Python syntax
         run: >-
           python -c "import ast; from pathlib import Path; files=sorted(Path('.').glob('*.py')); [ast.parse(p.read_text(encoding='utf-8'), filename=str(p)) for p in files]; print(f'Parsed {len(files)} Python files')"
+      - name: Create synthetic personal-report template
+        run: >-
+          python -c "from pathlib import Path; from openpyxl import Workbook; import generate_monthly_reports as m; p=Path('数据表模板/售后个人数据统计表.xlsx'); p.parent.mkdir(parents=True, exist_ok=True); w=Workbook(); s=w.active; s.title='个人绩效汇总'; [s.cell(1, i, h) for i, h in enumerate(m.PERSONAL_HEADERS, 1)]; d=w.create_sheet('考核异常明细'); [d.cell(1, i, h) for i, h in enumerate(m.PERSONAL_DETAIL_HEADERS, 1)]; w.create_sheet('考核设置'); w.save(p); w.close()"
       - name: Run unit tests
         run: python -B -m unittest -v test_personal_reports
